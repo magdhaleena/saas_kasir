@@ -19,7 +19,7 @@ app.use(session({
 }));
 
 // ── MongoDB ──
-mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost:27017/kasir_magdhalena')
+mongoose.connect('mongodb://localhost:27017/kasir_magdhalena')
     .then(async () => {
         console.log('✅ MongoDB terhubung!');
         await seedAdmin();
@@ -195,6 +195,16 @@ app.get('/transactions', requireLogin, async (req, res) => {
 });
 
 // ── Dashboard ──
+// ── Reset Transactions ──
+app.delete('/transactions/reset', requireLogin, requireAdmin, async (req, res) => {
+    try {
+        await Transaction.deleteMany({});
+        res.json({ message: 'Semua transaksi berhasil direset' });
+    } catch (err) {
+        res.status(500).json({ message: 'Gagal mereset transaksi' });
+    }
+});
+
 app.get('/dashboard', requireLogin, requireAdmin, async (req, res) => {
     try {
         const now = new Date();
