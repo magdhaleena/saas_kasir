@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <title>Login - Kasir Magdhalena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #0F0F0F;
+            --bg-2: #181818;
+            --bg-3: #222222;
+            --bg-4: #2A2A2A;
+            --border: rgba(255,255,255,0.07);
+            --gold: #D4A853;
+            --gold-light: #E8C47A;
+            --text: #F0EDE8;
+            --text-2: #9A9590;
+            --text-3: #5A5550;
+            --danger: #E05050;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background-image: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(212,168,83,0.06) 0%, transparent 60%);
+        }
+        .card {
+            width: 100%;
+            max-width: 380px;
+            background: var(--bg-2);
+            border: 0.5px solid var(--border);
+            border-radius: 20px;
+            padding: 40px 36px;
+            animation: fadeUp 0.5s ease both;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 32px;
+        }
+        .brand-icon {
+            width: 52px;
+            height: 52px;
+            background: var(--gold);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Instrument Serif', serif;
+            font-size: 28px;
+            color: #0F0F0F;
+        }
+        .brand-name {
+            font-family: 'Instrument Serif', serif;
+            font-size: 22px;
+            color: var(--text);
+            letter-spacing: -0.01em;
+        }
+        .brand-sub {
+            font-size: 12px;
+            color: var(--text-3);
+            margin-top: -6px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+        .input-group label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-2);
+        }
+        .input-group input {
+            background: var(--bg-3);
+            border: 0.5px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        .input-group input::placeholder { color: var(--text-3); }
+        .input-group input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212,168,83,0.12);
+        }
+        .login-btn {
+            width: 100%;
+            background: var(--gold);
+            color: #0F0F0F;
+            border: none;
+            border-radius: 10px;
+            padding: 13px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s, transform 0.15s;
+        }
+        .login-btn:hover { background: var(--gold-light); }
+        .login-btn:active { transform: scale(0.98); }
+        .error-msg {
+            background: rgba(224,80,80,0.1);
+            border: 0.5px solid rgba(224,80,80,0.3);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: var(--danger);
+            margin-top: 12px;
+            display: none;
+            text-align: center;
+        }
+        .error-msg.show { display: block; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="brand">
+        <div class="brand-icon">M</div>
+        <div class="brand-name">Magdhalena</div>
+        <div class="brand-sub">Kasir Online — Admin Panel</div>
+    </div>
+
+    <div class="input-group">
+        <label>Username</label>
+        <input type="text" id="username" placeholder="Masukkan username">
+    </div>
+
+    <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Masukkan password">
+    </div>
+
+    <button class="login-btn" onclick="doLogin()">Masuk</button>
+    <div class="error-msg" id="errorMsg"></div>
+</div>
+
+<script>
+    // Kalau udah login, langsung ke kasir
+    fetch('/check-auth').then(r => r.json()).then(data => {
+        if (data.loggedIn) window.location.href = '/index.html';
+    });
+
+    async function doLogin() {
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (!username || !password) {
+            errorMsg.textContent = 'Username dan password harus diisi!';
+            errorMsg.classList.add('show');
+            return;
+        }
+
+        try {
+            const res = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                window.location.href = '/index.html';
+            } else {
+                errorMsg.textContent = data.message;
+                errorMsg.classList.add('show');
+            }
+        } catch (err) {
+            errorMsg.textContent = 'Gagal terhubung ke server!';
+            errorMsg.classList.add('show');
+        }
+    }
+
+    // Enter key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') doLogin();
+    });
+</script>
+</body>
+</html>

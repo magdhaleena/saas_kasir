@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <title>Kasir Online Magdhalena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .prod-img { width:40px;height:40px;border-radius:8px;object-fit:cover;border:0.5px solid var(--border);flex-shrink:0; }
+        .prod-img-placeholder { width:40px;height:40px;border-radius:8px;background:var(--bg-3);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-3);font-size:18px;flex-shrink:0; }
+        .file-input-wrap { position:relative; }
+        .file-input-wrap input[type="file"] { position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%; }
+        .file-input-label { display:flex;align-items:center;gap:8px;background:var(--bg-4);border:0.5px dashed rgba(212,168,83,0.3);border-radius:8px;padding:9px 14px;color:var(--text-3);font-size:13px;cursor:pointer;transition:all 0.2s; }
+        .file-input-label:hover { border-color:var(--gold);color:var(--gold); }
+        .img-preview { width:60px;height:60px;border-radius:8px;object-fit:cover;border:0.5px solid var(--border);display:none;margin-top:6px; }
+        .role-badge { font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;display:inline-block; }
+        .role-admin { background:rgba(212,168,83,0.15);color:#D4A853; }
+        .role-kasir { background:rgba(80,180,100,0.12);color:#50B464; }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">M</div>
+            <div>
+                <div class="brand-name">Magdhalena</div>
+                <div class="brand-sub">Kasir Online</div>
+            </div>
+        </div>
+
+        <nav class="nav">
+            <a href="/dashboard.html" class="nav-item">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+            <a href="/index.html" class="nav-item active">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+                Kasir
+            </a>
+            <a href="/users.html" class="nav-item" id="navUsers" style="display:none">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                Kelola User
+            </a>
+        </nav>
+
+        <!-- Form tambah produk - hanya admin -->
+        <div class="form-card" id="formCard" style="display:none">
+            <div class="form-label">Tambah Produk Baru</div>
+            <div class="input-group">
+                <label for="productName">Nama Produk</label>
+                <input type="text" id="productName" placeholder="contoh: Nasi Goreng">
+            </div>
+            <div class="input-group">
+                <label for="productPrice">Harga (Rp)</label>
+                <input type="number" id="productPrice" placeholder="contoh: 15000">
+            </div>
+            <div class="input-group">
+                <label>Foto Produk (opsional)</label>
+                <div class="file-input-wrap">
+                    <div class="file-input-label" id="fileLabelText">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        Pilih foto produk
+                    </div>
+                    <input type="file" id="productImage" accept="image/*" onchange="previewImage(this)">
+                </div>
+                <img id="imgPreview" class="img-preview">
+            </div>
+            <button onclick="addProduct()">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Tambah Produk
+            </button>
+        </div>
+
+        <div class="total-card">
+            <div class="total-label">Total Belanja</div>
+            <div id="totalHarga" class="total-value">Rp 0</div>
+            <div class="total-count" id="totalCount">0 produk</div>
+            <button class="cetak-btn" id="cetakBtn" onclick="cetakStruk()" disabled>
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Cetak Struk
+            </button>
+        </div>
+
+        <div class="user-bar">
+            <div class="user-info">
+                <div class="user-avatar">A</div>
+                <div>
+                    <div id="adminName" style="font-size:13px;font-weight:500;color:var(--text)">admin</div>
+                    <span id="adminRole" class="role-badge role-admin">admin</span>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="doLogout()">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Keluar
+            </button>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="main-header">
+            <div>
+                <h1>Daftar Produk</h1>
+                <p class="main-sub">Kelola produk yang tersedia di kasir</p>
+            </div>
+            <div class="badge" id="productBadge">0 item</div>
+        </div>
+        <ul id="productList"></ul>
+    </main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

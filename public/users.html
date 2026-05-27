@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <title>Kelola User - Kasir Magdhalena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .role-badge{font-size:11px;padding:3px 10px;border-radius:10px;font-weight:600}
+        .role-admin{background:rgba(212,168,83,0.15);color:#D4A853}
+        .role-kasir{background:rgba(80,180,100,0.12);color:#50B464}
+        .user-table{width:100%;border-collapse:collapse}
+        .user-table th{text-align:left;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3);padding:10px 16px;border-bottom:0.5px solid var(--border)}
+        .user-table td{padding:14px 16px;border-bottom:0.5px solid var(--border);font-size:13px;color:var(--text)}
+        .user-table tr:last-child td{border-bottom:none}
+        .user-table tr:hover td{background:var(--bg-3)}
+        .select-input{background:var(--bg-4);border:0.5px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;outline:none;width:100%;appearance:none}
+        .select-input:focus{border-color:var(--gold)}
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">M</div>
+            <div>
+                <div class="brand-name">Magdhalena</div>
+                <div class="brand-sub">Kasir Online</div>
+            </div>
+        </div>
+        <nav class="nav">
+            <a href="/dashboard.html" class="nav-item">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+            <a href="/index.html" class="nav-item">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+                Kasir
+            </a>
+            <a href="/users.html" class="nav-item active">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                Kelola User
+            </a>
+        </nav>
+
+        <div class="form-card">
+            <div class="form-label">Tambah User Baru</div>
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="newUsername" placeholder="contoh: kasir1">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="newPassword" placeholder="Masukkan password">
+            </div>
+            <div class="input-group">
+                <label>Role</label>
+                <select id="newRole" class="select-input">
+                    <option value="kasir">Kasir</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <button onclick="addUser()">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Tambah User
+            </button>
+        </div>
+
+        <div class="user-bar" style="margin-top:auto">
+            <div class="user-info">
+                <div class="user-avatar">A</div>
+                <span id="adminName">admin</span>
+            </div>
+            <button class="logout-btn" onclick="doLogout()">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Keluar
+            </button>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="main-header">
+            <div>
+                <h1>Kelola User</h1>
+                <p class="main-sub">Tambah dan kelola akun kasir</p>
+            </div>
+            <div class="badge" id="userBadge">0 user</div>
+        </div>
+
+        <div style="background:var(--bg-2);border:0.5px solid var(--border);border-radius:14px;overflow:hidden">
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Dibuat</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <tr><td colspan="4" style="text-align:center;color:var(--text-3);padding:32px">Memuat data...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<script>
+async function checkAuth() {
+    const res = await fetch('/check-auth');
+    const data = await res.json();
+    if (!data.loggedIn) { window.location.href = '/login.html'; return; }
+    if (data.role !== 'admin') { window.location.href = '/index.html'; return; }
+    document.getElementById('adminName').textContent = data.username;
+}
+
+async function doLogout() {
+    await fetch('/logout', { method: 'POST' });
+    window.location.href = '/login.html';
+}
+
+function showToast(msg) {
+    let toast = document.getElementById('toast');
+    if (!toast) { toast = document.createElement('div'); toast.id = 'toast'; toast.className = 'toast'; document.body.appendChild(toast); }
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+async function loadUsers() {
+    const res = await fetch('/users');
+    if (res.status === 401) { window.location.href = '/login.html'; return; }
+    const users = await res.json();
+    document.getElementById('userBadge').textContent = users.length + ' user';
+    const tbody = document.getElementById('userTableBody');
+    if (!users.length) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-3);padding:32px">Belum ada user</td></tr>';
+        return;
+    }
+    tbody.innerHTML = users.map(u => `
+        <tr>
+            <td style="font-weight:500">${u.username}</td>
+            <td><span class="role-badge role-${u.role}">${u.role}</span></td>
+            <td style="color:var(--text-3)">${new Date(u.createdAt).toLocaleDateString('id-ID', {day:'2-digit',month:'short',year:'numeric'})}</td>
+            <td>${u.username === 'admin' ? '<span style="color:var(--text-3);font-size:12px">—</span>' :
+                `<button class="delete-btn" onclick="deleteUser('${u._id}')">Hapus</button>`}
+            </td>
+        </tr>
+    `).join('');
+}
+
+async function addUser() {
+    const username = document.getElementById('newUsername').value.trim();
+    const password = document.getElementById('newPassword').value.trim();
+    const role = document.getElementById('newRole').value;
+    if (!username || !password) { showToast('⚠ Username dan password wajib diisi!'); return; }
+    const res = await fetch('/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password, role })
+    });
+    const data = await res.json();
+    if (res.ok) {
+        showToast('✓ User ' + username + ' berhasil ditambahkan');
+        document.getElementById('newUsername').value = '';
+        document.getElementById('newPassword').value = '';
+        loadUsers();
+    } else {
+        showToast('⚠ ' + data.message);
+    }
+}
+
+async function deleteUser(id) {
+    await fetch('/users/' + id, { method: 'DELETE' });
+    showToast('User berhasil dihapus');
+    loadUsers();
+}
+
+checkAuth();
+loadUsers();
+</script>
+</body>
+</html>

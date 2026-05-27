@@ -1,0 +1,509 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg: #0F0F0F;
+    --bg-2: #181818;
+    --bg-3: #222222;
+    --bg-4: #2A2A2A;
+    --border: rgba(255,255,255,0.07);
+    --border-hover: rgba(255,255,255,0.14);
+    --gold: #D4A853;
+    --gold-light: #E8C47A;
+    --gold-dim: rgba(212,168,83,0.12);
+    --gold-dim2: rgba(212,168,83,0.06);
+    --text: #F0EDE8;
+    --text-2: #9A9590;
+    --text-3: #5A5550;
+    --danger: #E05050;
+    --danger-dim: rgba(224,80,80,0.1);
+    --radius: 14px;
+    --radius-sm: 8px;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.5;
+}
+
+/* ── Layout ── */
+.wrapper {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    min-height: 100vh;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+    background: var(--bg-2);
+    border-right: 0.5px solid var(--border);
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+/* Brand */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 24px;
+    border-bottom: 0.5px solid var(--border);
+}
+
+.brand-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--gold);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    color: #0F0F0F;
+    font-weight: 400;
+    flex-shrink: 0;
+}
+
+.brand-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+}
+
+.brand-sub {
+    font-size: 12px;
+    color: var(--text-2);
+    margin-top: 1px;
+}
+
+/* Form Card */
+.form-card {
+    background: var(--bg-3);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.form-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-3);
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.input-group label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-2);
+}
+
+.input-group input {
+    background: var(--bg-4);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+}
+
+.input-group input::placeholder {
+    color: var(--text-3);
+}
+
+.input-group input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(212,168,83,0.12);
+}
+
+.form-card button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+    background: var(--gold);
+    color: #0F0F0F;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 11px 16px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 2px;
+    transition: background 0.2s, transform 0.15s;
+}
+
+.form-card button:hover {
+    background: var(--gold-light);
+}
+
+.form-card button:active {
+    transform: scale(0.98);
+}
+
+/* Total Card */
+.total-card {
+    margin-top: auto;
+    background: var(--gold-dim2);
+    border: 0.5px solid rgba(212,168,83,0.2);
+    border-radius: var(--radius);
+    padding: 20px;
+}
+
+.total-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.7;
+    margin-bottom: 8px;
+}
+
+.total-value {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    color: var(--gold-light);
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+}
+
+.total-count {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-top: 6px;
+}
+
+/* ── Main ── */
+.main {
+    padding: 40px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.main-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.main-header h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.main-sub {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-top: 4px;
+}
+
+.badge {
+    background: var(--gold-dim);
+    color: var(--gold);
+    border: 0.5px solid rgba(212,168,83,0.25);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* ── Product List ── */
+#productList {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#productList li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--bg-2);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    transition: border-color 0.2s, background 0.2s;
+    animation: slideIn 0.25s ease both;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+#productList li:hover {
+    border-color: var(--border-hover);
+    background: var(--bg-3);
+}
+
+.item-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+}
+
+.item-number {
+    width: 28px;
+    height: 28px;
+    background: var(--bg-4);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-3);
+    flex-shrink: 0;
+}
+
+.item-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.item-price {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gold);
+    background: var(--gold-dim);
+    padding: 4px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.delete-btn {
+    background: transparent;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-3);
+    padding: 6px 12px;
+    font-size: 12px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.delete-btn:hover {
+    background: var(--danger-dim);
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+/* ── Empty State ── */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 60px 24px;
+    border: 0.5px dashed var(--border);
+    border-radius: var(--radius);
+    color: var(--text-3);
+    font-size: 14px;
+    text-align: center;
+    list-style: none;
+}
+
+.empty-state svg {
+    opacity: 0.3;
+    margin-bottom: 4px;
+}
+
+/* ── Notif Toast ── */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--bg-3);
+    border: 0.5px solid var(--border-hover);
+    border-radius: var(--radius-sm);
+    padding: 12px 20px;
+    font-size: 13px;
+    color: var(--text);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 99;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .wrapper {
+        grid-template-columns: 1fr;
+    }
+    .sidebar {
+        position: static;
+        height: auto;
+    }
+    .main {
+        padding: 24px 20px;
+    }
+}
+
+/* ── User Bar ── */
+.user-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-top: 16px;
+    border-top: 0.5px solid var(--border);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-2);
+}
+
+.user-avatar {
+    width: 28px;
+    height: 28px;
+    background: var(--gold-dim);
+    border: 0.5px solid rgba(212,168,83,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gold);
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: transparent;
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    color: var(--text-3);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.logout-btn:hover {
+    background: rgba(224,80,80,0.1);
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+/* ── Cetak Struk Button ── */
+.cetak-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+    background: transparent;
+    border: 0.5px solid rgba(212,168,83,0.4);
+    border-radius: 8px;
+    padding: 10px;
+    color: var(--gold);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: all 0.2s;
+}
+
+.cetak-btn:hover:not(:disabled) {
+    background: var(--gold-dim);
+    border-color: var(--gold);
+}
+
+.cetak-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+/* ── Nav ── */
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-2);
+    text-decoration: none;
+    transition: all 0.15s;
+    border: 0.5px solid transparent;
+}
+
+.nav-item:hover {
+    background: var(--bg-3);
+    color: var(--text);
+}
+
+.nav-item.active {
+    background: var(--gold-dim);
+    color: var(--gold);
+    border-color: rgba(212,168,83,0.2);
+}

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <title>Dashboard - Kasir Magdhalena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .dash-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+        .stat-card {
+            background: var(--bg-2);
+            border: 0.5px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: border-color 0.2s;
+        }
+        .stat-card:hover { border-color: var(--border-hover); }
+        .stat-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 4px;
+        }
+        .stat-icon.gold { background: var(--gold-dim); color: var(--gold); }
+        .stat-icon.blue { background: rgba(56,132,220,0.12); color: #378ADC; }
+        .stat-icon.green { background: rgba(80,180,100,0.12); color: #50B464; }
+        .stat-icon.purple { background: rgba(150,100,220,0.12); color: #9664DC; }
+        .stat-label { font-size: 11px; font-weight: 500; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; }
+        .stat-value { font-family: 'Instrument Serif', serif; font-size: 26px; color: var(--text); line-height: 1; }
+        .stat-sub { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+        /* Grafik */
+        .chart-card {
+            background: var(--bg-2);
+            border: 0.5px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 28px;
+        }
+        .chart-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 20px;
+        }
+        .chart-area {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            height: 140px;
+        }
+        .chart-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            height: 100%;
+            justify-content: flex-end;
+        }
+        .chart-bar-wrap {
+            width: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            flex: 1;
+        }
+        .chart-bar {
+            width: 100%;
+            max-width: 36px;
+            background: var(--gold-dim);
+            border-radius: 6px 6px 0 0;
+            border: 0.5px solid rgba(212,168,83,0.2);
+            min-height: 4px;
+            transition: background 0.2s;
+            position: relative;
+        }
+        .chart-bar.active { background: var(--gold); border-color: var(--gold); }
+        .chart-bar:hover { background: var(--gold-light); }
+        .chart-label { font-size: 10px; color: var(--text-3); text-align: center; white-space: nowrap; }
+        .chart-val { font-size: 9px; color: var(--text-3); text-align: center; }
+
+        /* Transaksi terakhir */
+        .trx-card {
+            background: var(--bg-2);
+            border: 0.5px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .trx-header {
+            padding: 16px 20px;
+            border-bottom: 0.5px solid var(--border);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .trx-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 13px 20px;
+            border-bottom: 0.5px solid var(--border);
+            gap: 12px;
+            transition: background 0.15s;
+        }
+        .trx-item:last-child { border-bottom: none; }
+        .trx-item:hover { background: var(--bg-3); }
+        .trx-id { font-size: 12px; font-weight: 600; color: var(--gold); }
+        .trx-time { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+        .trx-total { font-size: 13px; font-weight: 600; color: var(--text); }
+        .trx-items-count { font-size: 11px; color: var(--text-3); }
+        .trx-empty { padding: 32px; text-align: center; color: var(--text-3); font-size: 13px; }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">M</div>
+            <div>
+                <div class="brand-name">Magdhalena</div>
+                <div class="brand-sub">Kasir Online</div>
+            </div>
+        </div>
+
+        <!-- Nav -->
+        <nav class="nav">
+            <a href="/dashboard.html" class="nav-item active">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+            <a href="/index.html" class="nav-item">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+                Kasir
+            </a>
+        </nav>
+
+        <div class="user-bar" style="margin-top:auto">
+            <div class="user-info">
+                <div class="user-avatar">A</div>
+                <span id="adminName">admin</span>
+            </div>
+            <button class="logout-btn" onclick="doLogout()">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Keluar
+            </button>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="main-header">
+            <div>
+                <h1>Dashboard</h1>
+                <p class="main-sub" id="tanggalHari">Selamat datang!</p>
+            </div>
+            <button class="cetak-btn" style="width:auto;padding:8px 16px" onclick="location.reload()">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                Refresh
+            </button>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="dash-grid" id="statGrid">
+            <div class="stat-card">
+                <div class="stat-icon gold">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+                </div>
+                <div class="stat-label">Total Produk</div>
+                <div class="stat-value" id="statProduk">-</div>
+                <div class="stat-sub">produk terdaftar</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                </div>
+                <div class="stat-label">Total Pendapatan</div>
+                <div class="stat-value" id="statPendapatan">-</div>
+                <div class="stat-sub">semua waktu</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                </div>
+                <div class="stat-label">Transaksi Hari Ini</div>
+                <div class="stat-value" id="statHariIni">-</div>
+                <div class="stat-sub" id="statPendapatanHariIni">Rp 0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon purple">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div class="stat-label">Total Transaksi</div>
+                <div class="stat-value" id="statTotalTrx">-</div>
+                <div class="stat-sub">semua waktu</div>
+            </div>
+        </div>
+
+        <!-- Grafik -->
+        <div class="chart-card">
+            <div class="chart-title">📈 Pendapatan 7 Hari Terakhir</div>
+            <div class="chart-area" id="chartArea">
+                <div style="color:var(--text-3);font-size:13px;width:100%;text-align:center">Memuat grafik...</div>
+            </div>
+        </div>
+
+        <!-- Transaksi Terakhir -->
+        <div class="trx-card">
+            <div class="trx-header">🧾 Transaksi Terakhir</div>
+            <div id="trxList"><div class="trx-empty">Belum ada transaksi</div></div>
+        </div>
+    </main>
+</div>
+
+<script>
+async function checkAuth() {
+    const res = await fetch('/check-auth');
+    const data = await res.json();
+    if (!data.loggedIn) {
+        window.location.href = '/login.html';
+    } else {
+        document.getElementById('adminName').textContent = data.username;
+    }
+}
+
+async function doLogout() {
+    await fetch('/logout', { method: 'POST' });
+    window.location.href = '/login.html';
+}
+
+function fmtRp(n) {
+    if (n >= 1000000) return 'Rp ' + (n/1000000).toFixed(1) + 'jt';
+    if (n >= 1000) return 'Rp ' + (n/1000).toFixed(0) + 'rb';
+    return 'Rp ' + n.toLocaleString('id-ID');
+}
+
+function fmtRpFull(n) {
+    return 'Rp ' + Number(n).toLocaleString('id-ID');
+}
+
+async function loadDashboard() {
+    try {
+        const res = await fetch('/dashboard');
+        if (res.status === 401) { window.location.href = '/login.html'; return; }
+        const d = await res.json();
+
+        // Stat cards
+        document.getElementById('statProduk').textContent = d.totalProduk;
+        document.getElementById('statPendapatan').textContent = fmtRp(d.totalPendapatan);
+        document.getElementById('statHariIni').textContent = d.transaksiHariIni;
+        document.getElementById('statPendapatanHariIni').textContent = fmtRpFull(d.pendapatanHariIni) + ' hari ini';
+        document.getElementById('statTotalTrx').textContent = d.totalTransaksi;
+
+        // Tanggal
+        document.getElementById('tanggalHari').textContent = new Date().toLocaleDateString('id-ID', {
+            weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+        });
+
+        // Grafik
+        const maxVal = Math.max(...d.grafik.map(g => g.total), 1);
+        const chartArea = document.getElementById('chartArea');
+        const todayStr = new Date().toISOString().slice(0, 10);
+        chartArea.innerHTML = d.grafik.map(g => {
+            const heightPct = Math.max((g.total / maxVal) * 100, 3);
+            const isToday = g.date === todayStr;
+            return `
+                <div class="chart-col">
+                    <div class="chart-val">${g.total > 0 ? fmtRp(g.total) : ''}</div>
+                    <div class="chart-bar-wrap">
+                        <div class="chart-bar ${isToday ? 'active' : ''}" style="height:${heightPct}%"></div>
+                    </div>
+                    <div class="chart-label" style="${isToday ? 'color:var(--gold);font-weight:600' : ''}">${g.label}</div>
+                </div>`;
+        }).join('');
+
+        // Transaksi terakhir
+        const trxList = document.getElementById('trxList');
+        if (d.transaksiTerakhir.length === 0) {
+            trxList.innerHTML = '<div class="trx-empty">Belum ada transaksi</div>';
+        } else {
+            trxList.innerHTML = d.transaksiTerakhir.map(t => `
+                <div class="trx-item">
+                    <div>
+                        <div class="trx-id">${t.id}</div>
+                        <div class="trx-time">${new Date(t.timestamp).toLocaleString('id-ID', {
+                            day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'
+                        })}</div>
+                    </div>
+                    <div style="text-align:right">
+                        <div class="trx-total">${fmtRpFull(t.total)}</div>
+                        <div class="trx-items-count">${t.items.length} item</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+    } catch (err) {
+        console.error('Gagal load dashboard:', err);
+    }
+}
+
+checkAuth();
+loadDashboard();
+</script>
+</body>
+</html>

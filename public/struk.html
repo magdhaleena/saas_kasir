@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <title>Struk - Kasir Magdhalena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #0F0F0F;
+            --bg-2: #181818;
+            --border: rgba(255,255,255,0.07);
+            --gold: #D4A853;
+            --gold-light: #E8C47A;
+            --gold-dim: rgba(212,168,83,0.12);
+            --text: #F0EDE8;
+            --text-2: #9A9590;
+            --text-3: #5A5550;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 40px 24px;
+            gap: 24px;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: transparent;
+            border: 0.5px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 14px;
+            color: var(--text-2);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        .back-btn:hover { border-color: rgba(255,255,255,0.15); color: var(--text); }
+
+        .print-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--gold);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 18px;
+            color: #0F0F0F;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .print-btn:hover { background: var(--gold-light); }
+
+        /* Struk */
+        .struk-wrapper {
+            width: 100%;
+            max-width: 420px;
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: fadeUp 0.4s ease both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .struk {
+            font-family: 'Courier Prime', monospace;
+            color: #1a1a1a;
+            padding: 32px 28px;
+        }
+
+        /* Header struk */
+        .struk-header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #ccc;
+            margin-bottom: 20px;
+        }
+
+        .struk-logo {
+            width: 44px;
+            height: 44px;
+            background: #D4A853;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #fff;
+            margin: 0 auto 10px;
+            font-family: serif;
+        }
+
+        .struk-toko {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #1a1a1a;
+        }
+
+        .struk-alamat {
+            font-size: 11px;
+            color: #666;
+            margin-top: 4px;
+            line-height: 1.5;
+        }
+
+        /* Info struk */
+        .struk-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #555;
+            margin-bottom: 20px;
+            gap: 8px;
+        }
+
+        .struk-info div { line-height: 1.7; }
+
+        /* Items */
+        .struk-items {
+            border-top: 1px dashed #ccc;
+            border-bottom: 1px dashed #ccc;
+            padding: 16px 0;
+            margin-bottom: 16px;
+        }
+
+        .struk-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            font-size: 13px;
+            padding: 4px 0;
+            gap: 12px;
+        }
+
+        .struk-item-name { flex: 1; color: #1a1a1a; }
+        .struk-item-price { color: #1a1a1a; font-weight: 700; white-space: nowrap; }
+
+        /* Total */
+        .struk-total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 3px 0;
+            color: #444;
+        }
+
+        .struk-total-row.grand {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1a1a;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            margin-top: 6px;
+        }
+
+        /* Footer */
+        .struk-footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px dashed #ccc;
+        }
+
+        .struk-footer p {
+            font-size: 11px;
+            color: #888;
+            line-height: 1.8;
+        }
+
+        .struk-footer .thanks {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        /* Zigzag bawah */
+        .zigzag {
+            height: 16px;
+            background: linear-gradient(-45deg, var(--bg) 8px, transparent 0) 0 8px,
+                        linear-gradient(45deg, var(--bg) 8px, #fff 0) 0 8px;
+            background-size: 16px 16px;
+            background-position: left bottom;
+        }
+
+        /* Print styles */
+        @media print {
+            body { background: white; padding: 0; }
+            .toolbar { display: none; }
+            .struk-wrapper { box-shadow: none; border-radius: 0; max-width: 100%; }
+            .zigzag { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="toolbar">
+    <a href="/index.html" class="back-btn">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Kembali
+    </a>
+    <button class="print-btn" onclick="window.print()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Cetak Struk
+    </button>
+</div>
+
+<div class="struk-wrapper">
+    <div class="struk" id="strukContent">
+        <div class="struk-header">
+            <div class="struk-logo">M</div>
+            <div class="struk-toko">Magdhalena</div>
+            <div class="struk-alamat">Kasir Online<br>Jepara, Jawa Tengah</div>
+        </div>
+
+        <div class="struk-info">
+            <div>
+                <div>No. Struk</div>
+                <div>Tanggal</div>
+                <div>Waktu</div>
+            </div>
+            <div style="text-align:right">
+                <div id="noStruk">-</div>
+                <div id="tanggalStruk">-</div>
+                <div id="waktuStruk">-</div>
+            </div>
+        </div>
+
+        <div class="struk-items" id="strukItems"></div>
+
+        <div>
+            <div class="struk-total-row">
+                <span>Subtotal</span>
+                <span id="subtotalStruk">Rp 0</span>
+            </div>
+            <div class="struk-total-row">
+                <span>Pajak (0%)</span>
+                <span>Rp 0</span>
+            </div>
+            <div class="struk-total-row grand">
+                <span>TOTAL</span>
+                <span id="totalStruk">Rp 0</span>
+            </div>
+        </div>
+
+        <div class="struk-footer">
+            <p class="thanks">Terima Kasih!</p>
+            <p>Barang yang sudah dibeli<br>tidak dapat dikembalikan</p>
+            <p style="margin-top:8px;color:#bbb;font-size:10px">★ Kasir Online Magdhalena ★</p>
+        </div>
+    </div>
+    <div class="zigzag"></div>
+</div>
+
+<script>
+    // Ambil data dari localStorage yang dikirim dari halaman kasir
+    function loadStruk() {
+        const data = localStorage.getItem('strukData');
+        if (!data) {
+            window.location.href = '/index.html';
+            return;
+        }
+
+        const { products, timestamp, noStruk } = JSON.parse(data);
+
+        // Nomor & waktu
+        document.getElementById('noStruk').textContent = noStruk;
+        const tgl = new Date(timestamp);
+        document.getElementById('tanggalStruk').textContent = tgl.toLocaleDateString('id-ID', { day:'2-digit', month:'long', year:'numeric' });
+        document.getElementById('waktuStruk').textContent = tgl.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+
+        // Items
+        let total = 0;
+        const itemsEl = document.getElementById('strukItems');
+        itemsEl.innerHTML = '';
+
+        products.forEach(p => {
+            total += Number(p.price);
+            const div = document.createElement('div');
+            div.className = 'struk-item';
+            div.innerHTML = `
+                <span class="struk-item-name">${p.name}</span>
+                <span class="struk-item-price">Rp ${Number(p.price).toLocaleString('id-ID')}</span>
+            `;
+            itemsEl.appendChild(div);
+        });
+
+        document.getElementById('subtotalStruk').textContent = 'Rp ' + total.toLocaleString('id-ID');
+        document.getElementById('totalStruk').textContent = 'Rp ' + total.toLocaleString('id-ID');
+    }
+
+    loadStruk();
+</script>
+</body>
+</html>
