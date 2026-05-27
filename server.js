@@ -19,7 +19,7 @@ app.use(session({
 }));
 
 // ── MongoDB ──
-mongoose.connect('mongodb://localhost:27017/kasir_magdhalena')
+mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost:27017/kasir_magdhalena')
     .then(async () => {
         console.log('✅ MongoDB terhubung!');
         await seedAdmin();
