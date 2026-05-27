@@ -507,3 +507,25 @@ body {
     color: var(--gold);
     border-color: rgba(212,168,83,0.2);
 }
+
+/* ── QRIS Button ── */
+.qris-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+    background: #1178C8;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    color: #fff;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.2s;
+}
+.qris-btn:hover:not(:disabled) { background: #1565A8; }
+.qris-btn:disabled { opacity: 0.35; cursor: not-allowed; }

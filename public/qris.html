@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <title>Pembayaran QRIS - Kasir Magdhalena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #0F0F0F;
+            --bg-2: #181818;
+            --bg-3: #222222;
+            --border: rgba(255,255,255,0.07);
+            --gold: #D4A853;
+            --gold-light: #E8C47A;
+            --text: #F0EDE8;
+            --text-2: #9A9590;
+            --text-3: #5A5550;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background-image: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(212,168,83,0.06) 0%, transparent 60%);
+        }
+        .card {
+            width: 100%;
+            max-width: 380px;
+            background: var(--bg-2);
+            border: 0.5px solid var(--border);
+            border-radius: 20px;
+            padding: 32px 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            animation: fadeUp 0.4s ease both;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .brand-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--gold);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Instrument Serif', serif;
+            font-size: 20px;
+            color: #0F0F0F;
+        }
+        .brand-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .qris-title {
+            font-family: 'Instrument Serif', serif;
+            font-size: 22px;
+            color: var(--gold-light);
+            text-align: center;
+        }
+        .total-box {
+            background: rgba(212,168,83,0.08);
+            border: 0.5px solid rgba(212,168,83,0.2);
+            border-radius: 12px;
+            padding: 14px 24px;
+            text-align: center;
+            width: 100%;
+        }
+        .total-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--gold);
+            opacity: 0.7;
+            margin-bottom: 4px;
+        }
+        .total-value {
+            font-family: 'Instrument Serif', serif;
+            font-size: 28px;
+            color: var(--gold-light);
+        }
+        .qr-wrap {
+            background: #fff;
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .qr-wrap img {
+            width: 220px;
+            height: 220px;
+            object-fit: contain;
+            display: block;
+        }
+        .scan-info {
+            font-size: 13px;
+            color: var(--text-2);
+            text-align: center;
+            line-height: 1.6;
+        }
+        .scan-info span {
+            color: var(--gold);
+            font-weight: 600;
+        }
+        .apps-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .app-badge {
+            background: var(--bg-3);
+            border: 0.5px solid var(--border);
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-size: 11px;
+            color: var(--text-2);
+            font-weight: 500;
+        }
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: transparent;
+            border: 0.5px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 20px;
+            color: var(--text-2);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            width: 100%;
+            justify-content: center;
+        }
+        .back-btn:hover {
+            border-color: rgba(255,255,255,0.15);
+            color: var(--text);
+        }
+        .sudah-btn {
+            width: 100%;
+            background: var(--gold);
+            color: #0F0F0F;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .sudah-btn:hover { background: var(--gold-light); }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="brand">
+        <div class="brand-icon">M</div>
+        <div class="brand-name">Magdhalena</div>
+    </div>
+
+    <div class="qris-title">Pembayaran QRIS</div>
+
+    <div class="total-box">
+        <div class="total-label">Total Tagihan</div>
+        <div class="total-value" id="totalTagihan">Rp 0</div>
+    </div>
+
+    <div class="qr-wrap">
+        <img src="/qris.jpg" alt="QRIS Dana Magdhalena">
+    </div>
+
+    <div class="scan-info">
+        Scan QR di atas menggunakan<br>
+        <span>GoPay, OVO, Dana, ShopeePay</span><br>
+        atau aplikasi m-banking kamu
+    </div>
+
+    <div class="apps-row">
+        <span class="app-badge">💙 Dana</span>
+        <span class="app-badge">💚 GoPay</span>
+        <span class="app-badge">💜 OVO</span>
+        <span class="app-badge">🧡 ShopeePay</span>
+        <span class="app-badge">🏦 m-Banking</span>
+    </div>
+
+    <button class="sudah-btn" onclick="sudahBayar()">
+        ✓ Sudah Bayar
+    </button>
+
+    <a href="/index.html" class="back-btn">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Kembali ke Kasir
+    </a>
+</div>
+
+<script>
+    // Ambil total dari localStorage
+    const data = localStorage.getItem('qrisData');
+    if (data) {
+        const { total } = JSON.parse(data);
+        document.getElementById('totalTagihan').textContent = 'Rp ' + Number(total).toLocaleString('id-ID');
+    }
+
+    function sudahBayar() {
+        // Hapus data qris
+        localStorage.removeItem('qrisData');
+        // Redirect ke struk
+        const strukData = localStorage.getItem('strukData');
+        if (strukData) {
+            window.location.href = '/struk.html';
+        } else {
+            window.location.href = '/index.html';
+        }
+    }
+</script>
+</body>
+</html>

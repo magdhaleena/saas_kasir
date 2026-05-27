@@ -4,7 +4,6 @@ async function checkAuth() {
         const data = await res.json();
         if (!data.loggedIn) { window.location.href = '/login.html'; return; }
 
-        // Set nama dan role
         document.getElementById('adminName').textContent = data.username;
         const roleEl = document.getElementById('adminRole');
         if (roleEl) {
@@ -12,7 +11,6 @@ async function checkAuth() {
             roleEl.className = 'role-badge role-' + data.role;
         }
 
-        // Tampilkan elemen sesuai role
         if (data.role === 'admin') {
             const formCard = document.getElementById('formCard');
             if (formCard) formCard.style.display = 'flex';
@@ -20,7 +18,6 @@ async function checkAuth() {
             if (navUsers) navUsers.style.display = 'flex';
         }
     } catch (err) {
-        console.error('Auth error:', err);
         window.location.href = '/login.html';
     }
 }
@@ -49,10 +46,7 @@ function previewImage(input) {
     const label = document.getElementById('fileLabelText');
     if (input.files && input.files[0]) {
         const reader = new FileReader();
-        reader.onload = e => {
-            preview.src = e.target.result;
-            preview.style.display = 'block';
-        };
+        reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
         reader.readAsDataURL(input.files[0]);
         if (label) label.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> ${input.files[0].name}`;
     }
@@ -73,6 +67,7 @@ async function loadProducts() {
         const totalCount = document.getElementById('totalCount');
         const productBadge = document.getElementById('productBadge');
         const cetakBtn = document.getElementById('cetakBtn');
+        const qrisBtn = document.getElementById('qrisBtn');
 
         productList.innerHTML = '';
 
@@ -90,6 +85,7 @@ async function loadProducts() {
             totalCount.textContent = '0 produk';
             productBadge.textContent = '0 item';
             if (cetakBtn) cetakBtn.disabled = true;
+            if (qrisBtn) qrisBtn.disabled = true;
             return;
         }
 
@@ -103,9 +99,7 @@ async function loadProducts() {
             li.innerHTML = `
                 <div class="item-info">
                     ${imgHtml}
-                    <div>
-                        <div class="item-name">${product.name}</div>
-                    </div>
+                    <div><div class="item-name">${product.name}</div></div>
                 </div>
                 <div class="item-price">Rp ${Number(product.price).toLocaleString('id-ID')}</div>
                 <button class="delete-btn" onclick="deleteProduct('${product._id}')">Hapus</button>
@@ -117,6 +111,7 @@ async function loadProducts() {
         totalCount.textContent = products.length + ' produk';
         productBadge.textContent = products.length + ' item';
         if (cetakBtn) cetakBtn.disabled = false;
+        if (qrisBtn) qrisBtn.disabled = false;
 
     } catch (err) {
         console.error('Gagal memuat produk:', err);
@@ -127,7 +122,6 @@ async function addProduct() {
     const productName = document.getElementById('productName');
     const productPrice = document.getElementById('productPrice');
     const productImage = document.getElementById('productImage');
-
     const name = productName.value.trim();
     const price = productPrice.value.trim();
 
@@ -140,8 +134,7 @@ async function addProduct() {
     if (productImage.files[0]) formData.append('image', productImage.files[0]);
 
     try {
-        const res = await fetch('/products', { method: 'POST', body: formData });
-        const data = await res.json();
+        await fetch('/products', { method: 'POST', body: formData });
         showToast('✓ ' + name + ' berhasil ditambahkan');
         productName.value = '';
         productPrice.value = '';
@@ -170,17 +163,45 @@ async function cetakStruk() {
     if (currentProducts.length === 0) { showToast('⚠ Belum ada produk!'); return; }
     const noStruk = 'MGD-' + Date.now().toString().slice(-6);
     const total = currentProducts.reduce((sum, p) => sum + Number(p.price), 0);
+
     await fetch('/transactions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ items: currentProducts, total, noStruk })
     });
+
     localStorage.setItem('strukData', JSON.stringify({
         products: currentProducts,
         timestamp: new Date().toISOString(),
         noStruk
     }));
+
     window.open('/struk.html', '_blank');
+}
+
+async function bayarQRIS() {
+    if (currentProducts.length === 0) { showToast('⚠ Belum ada produk!'); return; }
+
+    const noStruk = 'MGD-' + Date.now().toString().slice(-6);
+    const total = currentProducts.reduce((sum, p) => sum + Number(p.price), 0);
+
+    // Simpan data untuk struk setelah bayar
+    localStorage.setItem('strukData', JSON.stringify({
+        products: currentProducts,
+        timestamp: new Date().toISOString(),
+        noStruk
+    }));
+
+    localStorage.setItem('qrisData', JSON.stringify({ total, noStruk }));
+
+    // Simpan transaksi
+    await fetch('/transactions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: currentProducts, total, noStruk, metodeBayar: 'QRIS' })
+    });
+
+    window.location.href = '/qris.html';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
