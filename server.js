@@ -25,7 +25,7 @@ mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost:27017/kasir_magdh
         await seedAdmin();
     })
     .catch(err => console.error('❌ Gagal konek MongoDB:', err));
-
+    
 // ── Upload folder ──
 const uploadDir = path.join(__dirname, 'public', 'uploads');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
